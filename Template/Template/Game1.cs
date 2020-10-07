@@ -9,11 +9,17 @@ namespace Template
     /// </summary>
     public class Game1 : Game
     {
-        
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+
+       
+
+        private Texture2D playerTex;
+       
+        player player;
+
         //KOmentar
-        
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -28,7 +34,9 @@ namespace Template
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -41,6 +49,9 @@ namespace Template
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            playerTex = Content.Load<Texture2D>("player");
+
+            player = new player(playerTex);
 
             // TODO: use this.Content to load your game content here 
         }
@@ -64,6 +75,12 @@ namespace Template
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+
+
+            player.Update();
+
+
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -76,10 +93,15 @@ namespace Template
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            
+            player.draw(spriteBatch);
 
             // TODO: Add your drawing code here.
 
             base.Draw(gameTime);
+
+            spriteBatch.End();
         }
     }
 }
