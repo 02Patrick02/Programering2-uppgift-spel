@@ -9,20 +9,20 @@ namespace Template
     {
         private Texture2D bullets;
         private Vector2 playerPos, bulletsPos;
-        private Rectangle hitbox, bulletsRec;
+        private Rectangle  bulletsRec;
 
         private List<Vector2> Bullets = new List<Vector2>();
+
         public player(Texture2D tex) : base(tex)
         {
 
         }
-        
+
 
         public override void Update()
         {
             KeyboardState a = Keyboard.GetState();
 
-            hitbox = new Rectangle((int)hitbox.X, (int)hitbox.Y, 100, 100);
             bulletsRec = new Rectangle((int)bulletsRec.X, (int)bulletsRec.Y, 100, 100);
 
             if (a.IsKeyDown(Keys.D))
@@ -52,11 +52,10 @@ namespace Template
                 Bullets[i] = Bullets[i] - new Vector2(0, 5);
             }
         }
-      
+
         public void draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, new Rectangle((int)playerPos.X, (int)playerPos.Y, 100, 100), Color.White);
-            spriteBatch.Draw(bullets, bulletsPos, Color.White);
         }
     }
 }

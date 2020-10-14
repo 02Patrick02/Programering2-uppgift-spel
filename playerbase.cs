@@ -7,9 +7,12 @@ namespace Template
     class playerbase
     {
         protected Texture2D texture;
+        protected Rectangle hitbox;
+
 
         public virtual void Update()
         {
+
 
         }
 
