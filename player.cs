@@ -3,27 +3,29 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
+
 namespace Template
 {
     class player : playerbase
     {
-        private Texture2D bullets;
-        private Vector2 playerPos, bulletsPos;
-        private Rectangle  bulletsRec;
+        private Vector2 playerPos;
+        private Rectangle  bulletRec;
 
-        private List<Vector2> Bullets = new List<Vector2>();
+        private List<Vector2> BulletsList = new List<Vector2>();
+
+        public Rectangle BulletRec;
+ 
 
         public player(Texture2D tex) : base(tex)
         {
-
+           
         }
-
 
         public override void Update()
         {
             KeyboardState a = Keyboard.GetState();
 
-            bulletsRec = new Rectangle((int)bulletsRec.X, (int)bulletsRec.Y, 100, 100);
+            bulletRec = new Rectangle((int)bulletRec.X, (int)bulletRec.Y, 100, 100);
 
             if (a.IsKeyDown(Keys.D))
                 playerPos.X += 10;
@@ -45,17 +47,25 @@ namespace Template
 
             if (a.IsKeyDown(Keys.Space) && a.IsKeyUp(Keys.Space))
             {
-                Bullets.Add(playerPos + new Vector2(89, 0));
+                BulletsList.Add(playerPos);
             }
-            for (int i = 0; i < Bullets.Count; i++)
+            for (int i = 0; i < BulletsList.Count; i++)
             {
-                Bullets[i] = Bullets[i] - new Vector2(0, 5);
+                BulletsList[i] = BulletsList[i] - new Vector2(0, 5);
             }
         }
 
         public void draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, new Rectangle((int)playerPos.X, (int)playerPos.Y, 100, 100), Color.White);
+
+            foreach (Vector2 BulletList in BulletsList)
+            {
+                Rectangle rec = new Rectangle();
+                rec.Location = BulletsList.ToPoint();
+                rec.Size = new Point(40, 40);
+                spriteBatch.Draw(texture, rec, Color.White);
+            }
         }
     }
 }

@@ -12,10 +12,10 @@ namespace Template
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        private Texture2D playerTex, enemyTex;
+        private Texture2D playerTex, enemyTex, bulletTex;
 
        
-        player player;
+        player player, bullet;
 
         enemy enemy;
 
@@ -52,9 +52,12 @@ namespace Template
             spriteBatch = new SpriteBatch(GraphicsDevice);
             playerTex = Content.Load<Texture2D>("player");
             enemyTex = Content.Load<Texture2D>("enemy");
-
+            bulletTex = Content.Load<Texture2D>("bullet");
+            
+            
             enemy = new enemy(enemyTex);
             player = new player(playerTex);
+            bullet = new player(bulletTex);
 
             // TODO: use this.Content to load your game content here 
         }
@@ -98,7 +101,7 @@ namespace Template
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
-            
+            bullet.draw(spriteBatch);
             player.draw(spriteBatch);
             enemy.draw(spriteBatch);
             // TODO: Add your drawing code here.
