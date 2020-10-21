@@ -1,12 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Template
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Game1 : Game
     {
         private GraphicsDeviceManager graphics;
@@ -14,12 +13,17 @@ namespace Template
 
         private Texture2D playerTex, enemyTex, bulletTex;
 
-       
-        player player, bullet;
+        private int EnemyPos = 0, EnemyTimer = 0, SpawnRate = 60;
+
+        private Random rnd = new Random();
+
+        private List<Vector2> BulletsList = new List<Vector2>();
+        private List<Vector2> RandomEnemySpawn = new List<Vector2>();
+
+
+        player player;
 
         enemy enemy;
-
-        //KOmentar
 
         public Game1()
         {
@@ -27,12 +31,6 @@ namespace Template
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
@@ -42,13 +40,8 @@ namespace Template
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             playerTex = Content.Load<Texture2D>("player");
             enemyTex = Content.Load<Texture2D>("enemy");
@@ -56,56 +49,49 @@ namespace Template
             
             
             enemy = new enemy(enemyTex);
-            player = new player(playerTex);
-            bullet = new player(bulletTex);
-
-            // TODO: use this.Content to load your game content here 
+            player = new player(playerTex,BulletsList);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            KeyboardState a = Keyboard.GetState();
+
+            if (a.IsKeyDown(Keys.Escape))
                 Exit();
 
 
 
             player.Update();
             enemy.Update();
-
-
-            // TODO: Add your update logic here
+            for (int i = 0; i < BulletsList.Count; i++)
+            {
+                BulletsList[i] = BulletsList[i] - new Vector2(0, 5);
+            }
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
-            bullet.draw(spriteBatch);
             player.draw(spriteBatch);
             enemy.draw(spriteBatch);
-            // TODO: Add your drawing code here.
 
+            foreach (Vector2 BulletList in BulletsList)
+            {
+                Rectangle rec = new Rectangle();
+                rec.Location = BulletList.ToPoint();
+                rec.Size = new Point(40, 40);
+                spriteBatch.Draw(bulletTex, rec, Color.White);
+            }
             base.Draw(gameTime);
 
             spriteBatch.End();

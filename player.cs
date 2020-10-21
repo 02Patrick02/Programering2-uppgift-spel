@@ -9,23 +9,24 @@ namespace Template
     class player : playerbase
     {
         private Vector2 playerPos;
-        private Rectangle  bulletRec;
+    
 
-        private List<Vector2> BulletsList = new List<Vector2>();
+        private List<Vector2> BulletsList;
 
-        public Rectangle BulletRec;
+        private KeyboardState oldKState;
+
  
 
-        public player(Texture2D tex) : base(tex)
+        public player(Texture2D tex, List<Vector2> bullets) : base(tex)
         {
-           
+            BulletsList = bullets;
         }
 
         public override void Update()
         {
             KeyboardState a = Keyboard.GetState();
 
-            bulletRec = new Rectangle((int)bulletRec.X, (int)bulletRec.Y, 100, 100);
+            
 
             if (a.IsKeyDown(Keys.D))
                 playerPos.X += 10;
@@ -45,27 +46,18 @@ namespace Template
             if (playerPos.Y >= 930)
                 playerPos.Y = 930;
 
-            if (a.IsKeyDown(Keys.Space) && a.IsKeyUp(Keys.Space))
+            if (a.IsKeyDown(Keys.Space) && oldKState.IsKeyUp(Keys.Space))
             {
-                BulletsList.Add(playerPos);
+                BulletsList.Add(playerPos + new Vector2(30, 0));
             }
-            for (int i = 0; i < BulletsList.Count; i++)
-            {
-                BulletsList[i] = BulletsList[i] - new Vector2(0, 5);
-            }
+
+
+            oldKState = a;
         }
 
         public void draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, new Rectangle((int)playerPos.X, (int)playerPos.Y, 100, 100), Color.White);
-
-            foreach (Vector2 BulletList in BulletsList)
-            {
-                Rectangle rec = new Rectangle();
-                rec.Location = BulletsList.ToPoint();
-                rec.Size = new Point(40, 40);
-                spriteBatch.Draw(texture, rec, Color.White);
-            }
         }
     }
 }
