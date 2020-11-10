@@ -8,56 +8,61 @@ namespace Template
 {
     class player : playerbase
     {
-        private Vector2 playerPos;
+       
     
-
         private List<Vector2> BulletsList;
 
         private KeyboardState oldKState;
 
  
-
-        public player(Texture2D tex, List<Vector2> bullets) : base(tex)
+        public player(Texture2D tex, Vector2 position, List<Vector2> bullets, Point size) : base(tex)
         {
+            texture = tex;
             BulletsList = bullets;
+            base.position = position;
+            rectangle = new Rectangle(base.position.ToPoint(), size);
+
+
         }
 
         public override void Update()
         {
             KeyboardState a = Keyboard.GetState();
 
-            
 
             if (a.IsKeyDown(Keys.D))
-                playerPos.X += 10;
+                position.X += 10;
             if (a.IsKeyDown(Keys.A))
-                playerPos.X -= 10;
+                position.X -= 10;
             if (a.IsKeyDown(Keys.W))
-                playerPos.Y -= 10;
+                position.Y -= 10;
             if (a.IsKeyDown(Keys.S))
-                playerPos.Y += 10;
+                position.Y += 10;
 
-            if (playerPos.X <= 0)
-                playerPos.X = 0;
-            if (playerPos.X >= 1780)
-                playerPos.X = 1780;
-            if (playerPos.Y <= 0)
-                playerPos.Y = 0;
-            if (playerPos.Y >= 930)
-                playerPos.Y = 930;
+            if (position.X <= 0)
+                position.X = 0;
+            if (position.X >= 1780)
+                position.X = 1780;
+            if (position.Y <= 0)
+                position.Y = 0;
+            if (position.Y >= 930)
+                position.Y = 930;
 
             if (a.IsKeyDown(Keys.Space) && oldKState.IsKeyUp(Keys.Space))
             {
-                BulletsList.Add(playerPos + new Vector2(30, 0));
+                BulletsList.Add(position + new Vector2(30, 0));
+
             }
 
+            rectangle = new Rectangle(position.ToPoint(), rectangle.Size); // Rectangle = Position
 
             oldKState = a;
+
         }
 
-        public void draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, new Rectangle((int)playerPos.X, (int)playerPos.Y, 100, 100), Color.White);
+            spriteBatch.Draw(texture, rectangle, Color.White);
         }
     }
 }

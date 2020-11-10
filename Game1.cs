@@ -13,17 +13,19 @@ namespace Template
 
         private Texture2D playerTex, enemyTex, bulletTex;
 
-        private int EnemyPos = 0, EnemyTimer = 0, SpawnRate = 60;
+        private int EnemyPos = 0, EnemyTimer = 0, SpawnRate = 90;
 
         private Random rnd = new Random();
 
+
         private List<Vector2> BulletsList = new List<Vector2>();
         private List<Vector2> RandomEnemySpawn = new List<Vector2>();
+        List<enemy> enemies = new List<enemy>();
 
 
         player player;
 
-        enemy enemy;
+        enemy enemy1;
 
         public Game1()
         {
@@ -44,12 +46,10 @@ namespace Template
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             playerTex = Content.Load<Texture2D>("player");
-            enemyTex = Content.Load<Texture2D>("enemy");
+            enemyTex = Content.Load<Texture2D>("enemy1");
             bulletTex = Content.Load<Texture2D>("bullet");
-            
-            
-            enemy = new enemy(enemyTex);
-            player = new player(playerTex,BulletsList);
+
+            player = new player(playerTex, new Vector2(100,100),BulletsList, new Point(100,100));
         }
 
         protected override void UnloadContent()
@@ -67,11 +67,51 @@ namespace Template
 
 
             player.Update();
-            enemy.Update();
+
+            foreach(enemy enemies in enemies)
+            {
+                enemies.Move();
+            }
+      
             for (int i = 0; i < BulletsList.Count; i++)
             {
                 BulletsList[i] = BulletsList[i] - new Vector2(0, 5);
             }
+
+
+            if (SpawnRate > 10)
+            {
+                EnemyTimer++;
+                if (EnemyTimer == 120)
+                {
+                    SpawnRate -= 5;
+                    EnemyTimer = 0;
+                }
+            }
+
+            if (SpawnRate <= 15 && SpawnRate > 5)
+            {
+                EnemyTimer++;
+                if (EnemyTimer == 120)
+                {
+                    SpawnRate -= 1;
+                    EnemyTimer = 0;
+                }
+            }
+
+            EnemyPos = rnd.Next(0, 1800);
+            if (rnd.Next(0, SpawnRate) == 0)
+            {
+               enemies.Add(new enemy(enemyTex, new Vector2 (EnemyPos, 0), new Point(100, 100)));
+            }
+            for (int i = 0; i < RandomEnemySpawn.Count; i++)
+            {
+                RandomEnemySpawn[i] = RandomEnemySpawn[i] - new Vector2(0, -2);
+
+            }
+
+
+
 
             base.Update(gameTime);
         }
@@ -82,8 +122,11 @@ namespace Template
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
-            player.draw(spriteBatch);
-            enemy.draw(spriteBatch);
+            player.Draw(spriteBatch);
+            foreach(enemy enemies in enemies)
+            {
+                enemies.Draw(spriteBatch);
+            }
 
             foreach (Vector2 BulletList in BulletsList)
             {

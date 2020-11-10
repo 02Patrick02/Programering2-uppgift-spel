@@ -8,21 +8,24 @@ namespace Template
 {
     class enemy : playerbase
     {
-        private Rectangle enemyRec;
-
-       
-        public enemy(Texture2D tex) : base(tex)
+        
+        public enemy(Texture2D tex, Vector2 position, Point size) : base(tex)
         {
-            
+            texture = tex;
+            base.position = position;
+            base.rectangle = new Rectangle(position.ToPoint(), size);
         }
 
-        public override void Update()
+        public void Move()
         {
-            
+            position.Y += 2;
+            rectangle = new Rectangle(position.ToPoint(), rectangle.Size); // Rectangle = Position
         }
-        public void draw(SpriteBatch spriteBatch)
+
+        public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, enemyRec, Color.White);
+            spriteBatch.Draw(texture, rectangle, Color.White);
+
         }
 
     }
