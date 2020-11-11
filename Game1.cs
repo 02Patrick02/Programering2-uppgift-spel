@@ -8,24 +8,24 @@ namespace Template
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager graphics;
+        private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+
+        private KeyboardState oldKState;
 
         private Texture2D playerTex, enemyTex, bulletTex;
 
         private int EnemyPos = 0, EnemyTimer = 0, SpawnRate = 90;
 
-        private Random rnd = new Random();
+        private readonly Random rnd = new Random();
 
 
-        private List<Vector2> BulletsList = new List<Vector2>();
-        private List<Vector2> RandomEnemySpawn = new List<Vector2>();
-        List<enemy> enemies = new List<enemy>();
+        private readonly List<Bullet> bullets = new List<Bullet>();
+        private readonly List<Vector2> RandomEnemySpawn = new List<Vector2>();
+        private readonly List<Enemy> enemies = new List<Enemy>();
 
 
-        player player;
-
-        enemy enemy1;
+        Player player;
 
         public Game1()
         {
@@ -46,10 +46,10 @@ namespace Template
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             playerTex = Content.Load<Texture2D>("player");
-            enemyTex = Content.Load<Texture2D>("enemy1");
+            enemyTex = Content.Load<Texture2D>("enemy");
             bulletTex = Content.Load<Texture2D>("bullet");
 
-            player = new player(playerTex, new Vector2(100,100),BulletsList, new Point(100,100));
+            player = new Player(playerTex, new Vector2(100,100), new Point(100,100));
         }
 
         protected override void UnloadContent()
@@ -61,21 +61,22 @@ namespace Template
         {
             KeyboardState a = Keyboard.GetState();
 
+
             if (a.IsKeyDown(Keys.Escape))
                 Exit();
 
 
-
+            
             player.Update();
 
-            foreach(enemy enemies in enemies)
+            foreach(Enemy enemies in enemies)
             {
                 enemies.Move();
             }
-      
-            for (int i = 0; i < BulletsList.Count; i++)
+
+            foreach(Bullet bullets in bullets)
             {
-                BulletsList[i] = BulletsList[i] - new Vector2(0, 5);
+                bullets.Move();
             }
 
 
@@ -102,7 +103,7 @@ namespace Template
             EnemyPos = rnd.Next(0, 1800);
             if (rnd.Next(0, SpawnRate) == 0)
             {
-               enemies.Add(new enemy(enemyTex, new Vector2 (EnemyPos, 0), new Point(100, 100)));
+               enemies.Add(new Enemy(enemyTex, new Vector2 (EnemyPos, 0), new Point(100, 100)));
             }
             for (int i = 0; i < RandomEnemySpawn.Count; i++)
             {
@@ -110,8 +111,24 @@ namespace Template
 
             }
 
+            if (a.IsKeyDown(Keys.Space) && oldKState.IsKeyUp(Keys.Space))
+            {
+                bullets.Add(new Bullet(bulletTex, new Vector2(player.Position.X + 30, player.Position.Y), new Point(40, 40)));
 
+            }
 
+            oldKState = a;
+
+            foreach (Bullet bullets in bullets)
+            {
+                for(int i = 0; i < enemies.Count; i++)
+                {
+                    if (bullets.Rectangle.Intersects(enemies[i].Rectangle))
+                    {
+                        enemies.RemoveAt(i);
+                    }
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -123,17 +140,14 @@ namespace Template
             spriteBatch.Begin();
 
             player.Draw(spriteBatch);
-            foreach(enemy enemies in enemies)
+            foreach(Enemy enemies in enemies)
             {
                 enemies.Draw(spriteBatch);
             }
 
-            foreach (Vector2 BulletList in BulletsList)
+            foreach (Bullet bullets in bullets)
             {
-                Rectangle rec = new Rectangle();
-                rec.Location = BulletList.ToPoint();
-                rec.Size = new Point(40, 40);
-                spriteBatch.Draw(bulletTex, rec, Color.White);
+                bullets.Draw(spriteBatch);
             }
             base.Draw(gameTime);
 

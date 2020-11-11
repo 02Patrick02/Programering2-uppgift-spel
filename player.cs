@@ -6,19 +6,11 @@ using System.Collections.Generic;
 
 namespace Template
 {
-    class player : playerbase
+    class Player : PlayerBase
     {
-       
-    
-        private List<Vector2> BulletsList;
-
-        private KeyboardState oldKState;
-
- 
-        public player(Texture2D tex, Vector2 position, List<Vector2> bullets, Point size) : base(tex)
+        public Player(Texture2D tex, Vector2 position, Point size) : base(tex)
         {
             texture = tex;
-            BulletsList = bullets;
             base.position = position;
             rectangle = new Rectangle(base.position.ToPoint(), size);
 
@@ -48,15 +40,11 @@ namespace Template
             if (position.Y >= 930)
                 position.Y = 930;
 
-            if (a.IsKeyDown(Keys.Space) && oldKState.IsKeyUp(Keys.Space))
-            {
-                BulletsList.Add(position + new Vector2(30, 0));
-
-            }
+            
 
             rectangle = new Rectangle(position.ToPoint(), rectangle.Size); // Rectangle = Position
 
-            oldKState = a;
+            
 
         }
 

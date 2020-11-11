@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace Template
 {
-    class Enemy : PlayerBase
+    class Bullet: PlayerBase
     {
         
-        public Enemy(Texture2D tex, Vector2 position, Point size) : base(tex)
+        public Bullet(Texture2D tex, Vector2 position, Point size) : base(tex)
         {
             texture = tex;
             base.position = position;
@@ -18,7 +18,7 @@ namespace Template
 
         public void Move()
         {
-            position.Y += 2;
+            position.Y -= 5;
             rectangle = new Rectangle(position.ToPoint(), rectangle.Size); // Rectangle = Position
         }
 

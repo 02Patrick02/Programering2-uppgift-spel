@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Template
 {
-    class playerbase
+    class PlayerBase
     {
         protected Texture2D texture;
         protected Rectangle rectangle;
@@ -28,7 +28,7 @@ namespace Template
 
         }
 
-        public playerbase(Texture2D tex)
+        public PlayerBase(Texture2D tex)
         {
             texture = tex;
         }
