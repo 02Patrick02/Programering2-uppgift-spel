@@ -8,7 +8,7 @@ namespace Template
 {
     class Enemy : PlayerBase
     {
-        
+
         public Enemy(Texture2D tex, Vector2 position, Point size) : base(tex)
         {
             texture = tex;

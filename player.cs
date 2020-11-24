@@ -40,11 +40,11 @@ namespace Template
             if (position.Y >= 930)
                 position.Y = 930;
 
-            
+
 
             rectangle = new Rectangle(position.ToPoint(), rectangle.Size); // Rectangle = Position
 
-            
+
 
         }
 

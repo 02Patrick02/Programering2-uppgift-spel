@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace Template
 {
-    class Bullet: PlayerBase
+    class Bullet : PlayerBase
     {
-        
+
         public Bullet(Texture2D tex, Vector2 position, Point size) : base(tex)
         {
             texture = tex;

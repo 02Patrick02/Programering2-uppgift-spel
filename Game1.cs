@@ -49,12 +49,12 @@ namespace Template
             enemyTex = Content.Load<Texture2D>("enemy");
             bulletTex = Content.Load<Texture2D>("bullet");
 
-            player = new Player(playerTex, new Vector2(100,100), new Point(100,100));
+            player = new Player(playerTex, new Vector2(100, 100), new Point(100, 100));
         }
 
         protected override void UnloadContent()
         {
-            
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -66,15 +66,15 @@ namespace Template
                 Exit();
 
 
-            
+
             player.Update();
 
-            foreach(Enemy enemies in enemies)
+            foreach (Enemy enemies in enemies)
             {
                 enemies.Move();
             }
 
-            foreach(Bullet bullets in bullets)
+            foreach (Bullet bullets in bullets)
             {
                 bullets.Move();
             }
@@ -103,7 +103,7 @@ namespace Template
             EnemyPos = rnd.Next(0, 1800);
             if (rnd.Next(0, SpawnRate) == 0)
             {
-               enemies.Add(new Enemy(enemyTex, new Vector2 (EnemyPos, 0), new Point(100, 100)));
+                enemies.Add(new Enemy(enemyTex, new Vector2(EnemyPos, 0), new Point(100, 100)));
             }
             for (int i = 0; i < RandomEnemySpawn.Count; i++)
             {
@@ -121,7 +121,7 @@ namespace Template
 
             foreach (Bullet bullets in bullets)
             {
-                for(int i = 0; i < enemies.Count; i++)
+                for (int i = 0; i < enemies.Count; i++)
                 {
                     if (bullets.Rectangle.Intersects(enemies[i].Rectangle))
                     {
@@ -133,14 +133,14 @@ namespace Template
             base.Update(gameTime);
         }
 
-        
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
             player.Draw(spriteBatch);
-            foreach(Enemy enemies in enemies)
+            foreach (Enemy enemies in enemies)
             {
                 enemies.Draw(spriteBatch);
             }
