@@ -15,13 +15,12 @@ namespace Template
 
         private Texture2D playerTex, enemyTex, bulletTex;
 
-        private int EnemyPos = 0, EnemyTimer = 0, SpawnRate = 90;
+        private int enemyCount = 0;
 
         private readonly Random rnd = new Random();
 
 
         private readonly List<Bullet> bullets = new List<Bullet>();
-        private readonly List<Vector2> RandomEnemySpawn = new List<Vector2>();
         private readonly List<Enemy> enemies = new List<Enemy>();
 
 
@@ -69,47 +68,37 @@ namespace Template
 
             player.Update();
 
-            foreach (Enemy enemies in enemies)
-            {
-                enemies.Move();
-            }
+            
 
             foreach (Bullet bullets in bullets)
             {
                 bullets.Move();
             }
 
-
-            if (SpawnRate > 10)
+            foreach (Enemy enemies in enemies)
             {
-                EnemyTimer++;
-                if (EnemyTimer == 120)
-                {
-                    SpawnRate -= 5;
-                    EnemyTimer = 0;
-                }
+                enemies.Move();
             }
 
-            if (SpawnRate <= 15 && SpawnRate > 5)
-            {
-                EnemyTimer++;
-                if (EnemyTimer == 120)
-                {
-                    SpawnRate -= 1;
-                    EnemyTimer = 0;
-                }
-            }
 
-            EnemyPos = rnd.Next(0, 1800);
-            if (rnd.Next(0, SpawnRate) == 0)
-            {
-                enemies.Add(new Enemy(enemyTex, new Vector2(EnemyPos, 0), new Point(100, 100)));
-            }
-            for (int i = 0; i < RandomEnemySpawn.Count; i++)
-            {
-                RandomEnemySpawn[i] = RandomEnemySpawn[i] - new Vector2(0, -2);
 
+            if (rnd.Next(0, 60) == 0 && enemyCount < 20)
+            {
+                enemies.Add(new Enemy(enemyTex, // Texture
+                    new Vector2( // Position
+                        rnd.Next(0, 1800), // X
+                        -100), // Y
+                    new Point(100, 100), // Size
+                    2)); // Health 
+
+
+                enemyCount++;
             }
+            else
+            {
+                enemyCount = 0;
+            }
+           
 
             if (a.IsKeyDown(Keys.Space) && oldKState.IsKeyUp(Keys.Space))
             {
@@ -119,13 +108,20 @@ namespace Template
 
             oldKState = a;
 
-            foreach (Bullet bullets in bullets)
+            for (int i = 0; i < bullets.Count; i++)
             {
-                for (int i = 0; i < enemies.Count; i++)
+                for (int j = 0; j < enemies.Count; j++)
                 {
-                    if (bullets.Rectangle.Intersects(enemies[i].Rectangle))
+                    if (bullets[i].Rectangle.Intersects(enemies[j].Rectangle))
                     {
-                        enemies.RemoveAt(i);
+
+                        enemies[j].HealthLoss();
+                        if (enemies[j].Health == 0)
+                            enemies.RemoveAt(j);
+
+                        bullets.RemoveAt(j);
+                        j--;
+                        i--;
                     }
                 }
             }

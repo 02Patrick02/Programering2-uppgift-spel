@@ -9,6 +9,7 @@ namespace Template
         protected Texture2D texture;
         protected Rectangle rectangle;
         protected Vector2 position;
+        protected int health;
 
         public Vector2 Position
         {
@@ -21,6 +22,13 @@ namespace Template
             get { return rectangle; }
             set { rectangle = value; }
         }
+
+        public int Health
+        {
+            get { return health; }
+            set { health = value; }
+        }
+
 
         public virtual void Update()
         {
