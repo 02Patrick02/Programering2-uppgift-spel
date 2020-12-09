@@ -82,16 +82,16 @@ namespace Template
 
 
 
-            if (rnd.Next(0, 60) == 1 && enemyCount < 2)
+            if (rnd.Next(0, 60) == 0 && enemyCount < 20)
             {
                 enemies.Add(new Enemy(enemyTex, new Vector2(rnd.Next(0, 1800),-100), new Point(100, 100), 2)); // texture, position, X, Y, Size, health 
 
 
-                enemyCount--;
+                enemyCount++;
             }
             else
             {
-                enemyCount = 1;
+                enemyCount = 0;
             }
 
 
