@@ -68,7 +68,7 @@ namespace Template
 
             player.Update();
 
-            
+
 
             foreach (Bullet bullets in bullets)
             {
@@ -82,23 +82,18 @@ namespace Template
 
 
 
-            if (rnd.Next(0, 60) == 0 && enemyCount < 20)
+            if (rnd.Next(0, 60) == 1 && enemyCount < 2)
             {
-                enemies.Add(new Enemy(enemyTex, // Texture
-                    new Vector2( // Position
-                        rnd.Next(0, 1800), // X
-                        -100), // Y
-                    new Point(100, 100), // Size
-                    2)); // Health 
+                enemies.Add(new Enemy(enemyTex, new Vector2(rnd.Next(0, 1800),-100), new Point(100, 100), 2)); // texture, position, X, Y, Size, health 
 
 
-                enemyCount++;
+                enemyCount--;
             }
             else
             {
-                enemyCount = 0;
+                enemyCount = 1;
             }
-           
+
 
             if (a.IsKeyDown(Keys.Space) && oldKState.IsKeyUp(Keys.Space))
             {
@@ -112,22 +107,32 @@ namespace Template
             {
                 for (int j = 0; j < enemies.Count; j++)
                 {
-                    if (bullets[i].Rectangle.Intersects(enemies[j].Rectangle))
+                    if (enemies[j].Rectangle.Intersects(bullets[i].Rectangle))
                     {
+                        bullets.RemoveAt(i);
+                        i--;
 
                         enemies[j].HealthLoss();
-                        if (enemies[j].Health == 0)
+                        if (enemies[j].Health <= 0)
+                        {
                             enemies.RemoveAt(j);
-
-                        bullets.RemoveAt(j);
-                        j--;
-                        i--;
+                            j--;
+                        }
                     }
                 }
-            }
 
-            base.Update(gameTime);
-        }
+
+                for (int j = 0; j < enemies.Count; j++)
+                {
+                    if (enemies[j].Rectangle.Intersects(player.Rectangle))
+                    {
+                        Exit();
+                    }
+                }
+               
+                base.Update(gameTime);
+            }
+        }  
 
 
         protected override void Draw(GameTime gameTime)
